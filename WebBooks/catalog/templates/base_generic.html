@@ -25,6 +25,13 @@
                 <li><a href="{% url 'index' %}">Главная страница</a></li>
                 <li><a href="{% url 'books' %}">Все книги</a></li>
                 <li><a href="{% url 'authors' %}">Все авторы</a></li>
+                <li><br></li>
+                {% if user.is_authenticated %}
+                    <li>Пользователь: {{ user.get_username }}</li>
+                    <li><a href="{% url 'logout' %}?next={{ request.path }}">Выход</a> </li>
+                {% else %}
+                    <li><a href="{% url 'login' %}?next={{ request.path }}">Вход</a> </li>
+                {% endif %}
             </ul>
             {% endblock sidebar %}
         </div>
@@ -52,7 +59,7 @@
             {% block footer %}
                 <hr>
                 {% block copyright %}
-                <p>Copyright ООО "Пони и книги", 2010. Все права принадлежат пони. Весь мир принадлежит пони</p>
+                <p>Copyright ООО "Пони и книги", 2010. Все права принадлежат пони. Весь мир принадлежит пони.</p>
                 {% endblock copyright %}
             {% endblock footer %}
         </div>
