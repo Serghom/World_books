@@ -1,8 +1,9 @@
 from django.http import *
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.views import generic
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Book, Author, BookInstance, Genre
 from .forms import AuthorsForm
 
@@ -64,6 +65,22 @@ def delete(request, id):
         return HttpResponseRedirect("/authors_add/")
     except Author.DoesNotExist:
         return HttpResponseNotFound("<h2>Автор не найден</h2>")
+
+
+class BookCreate(CreateView):
+    model = Book
+    fields = '__all__'
+    success_url = reverse_lazy('books')
+
+class BookUpdate(UpdateView):
+    model = Book
+    fields = '__all__'
+    success_url = reverse_lazy('books')
+
+
+class BookDelete(DeleteView):
+    model = Book
+    success_url = reverse_lazy('books')
 
 
 class BookListView(generic.ListView):
