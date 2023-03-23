@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Book, Author, BookInstance, Genre
 from .forms import AuthorsForm
@@ -66,6 +67,11 @@ def delete(request, id):
     except Author.DoesNotExist:
         return HttpResponseNotFound("<h2>Автор не найден</h2>")
 
+
+class SignUp(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
 
 class BookCreate(CreateView):
     model = Book
