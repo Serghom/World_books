@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+from datetime import date
 
 class Genre(models.Model):
     name = models.CharField(max_length=200, help_text="Введите жанр книги", verbose_name="Жанр книги")
@@ -68,8 +70,15 @@ class BookInstance(models.Model):
     imprint = models.CharField(max_length=200, help_text="Введите издательсво и год выпуска", verbose_name="Издательство")
     status = models.ForeignKey("Status", on_delete=models.CASCADE, null=True, help_text="Изменить состояние экземпляра", verbose_name="Статус экземпляра книги")
     due_back = models.DateField(null=True, blank=True, help_text="Введите конец срока статуса", verbose_name="Дата окончания статуса")
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Заказчик", help_text="Выберите заказчика книги")
 
     object = models.Manager()
 
     def __str__(self):
         return "№ {} {} {}".format(self.inv_nom, self.book, self.status)
+
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
